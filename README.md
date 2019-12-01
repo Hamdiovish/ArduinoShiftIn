@@ -29,8 +29,9 @@ ShiftIn<1> shift;
 
 void setup() {
   Serial.begin(9600);
-  // declare pins: pLoadPin, clockEnablePin, dataPin, clockPin
-  shift.begin(8, 9, 11, 12);
+  // declare pins: pLoadPin, dataPin, clockPin
+  // clockEnablePin to GND
+  shift.begin(8, 11, 12);
 }
 
 void displayValues() {
