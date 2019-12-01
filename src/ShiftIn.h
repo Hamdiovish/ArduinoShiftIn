@@ -3,6 +3,9 @@
  *
  * Created by Henrik Heine, July 24, 2016
  *
+ * Updated by Hamdiovish, Dec 01, 2019
+ * Removing the "clockEnablePin" to free one more pin on the Arduino, no need to toggle the 15th pin to use the chip, it's only need to be grounded.
+ *
 LICENSE
 The MIT License (MIT)
 
@@ -35,7 +38,6 @@ template<byte chipCount, typename ShiftType>
 class _ShiftIn {
 private:
 	byte ploadPin;
-	byte clockEnablePin;
 	byte dataPin;
 	byte clockPin;
 
@@ -48,9 +50,8 @@ public:
 	_ShiftIn() : dataWidth(chipCount * 8), pulseWidth(5), lastState(0), currentState(0) {}
 	
 	// setup all pins
-	void begin(int pload, int clockEN, int data, int clock) {
+	void begin(int pload, int data, int clock) {
 		pinMode(ploadPin = pload, OUTPUT);
-		pinMode(clockEnablePin = clockEN, OUTPUT);
 		pinMode(dataPin = data, INPUT);
 		pinMode(clockPin = clock, OUTPUT);
 	}
@@ -80,11 +81,9 @@ public:
 		lastState = currentState;
 		ShiftType result = 0;
 
-		digitalWrite(clockEnablePin, HIGH);
 		digitalWrite(ploadPin, LOW);
 		delayMicroseconds(pulseWidth);
 		digitalWrite(ploadPin, HIGH);
-		digitalWrite(clockEnablePin, LOW);
 
 		for(int i = 0; i < dataWidth; i++) {
 			ShiftType value = digitalRead(dataPin);
